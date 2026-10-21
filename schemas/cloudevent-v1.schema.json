@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.observa.example/contracts/cloudevent-v1.schema.json",
+  "title": "Observa CloudEvents Structured JSON Envelope v1",
+  "description": "Observa's constrained CloudEvents 1.0 structured JSON profile. Replace the example-domain schema IDs before public production use.",
+  "type": "object",
+  "required": [
+    "specversion",
+    "id",
+    "source",
+    "type",
+    "time",
+    "datacontenttype",
+    "dataschema",
+    "data"
+  ],
+  "properties": {
+    "specversion": {
+      "const": "1.0",
+      "description": "CloudEvents specification version; not the Observa payload schema version."
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "Stable event identity; reuse for retries of the same logical event.",
+      "pattern": "\\S"
+    },
+    "source": {
+      "type": "string",
+      "format": "uri-reference",
+      "minLength": 1,
+      "maxLength": 512,
+      "description": "Producer-declared event source URI-reference, which ingestion must authorize against the authenticated source registration."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "com.observa.user_action",
+        "com.observa.business_state",
+        "com.observa.technical_signal"
+      ],
+      "description": "Observa semantic event category using CloudEvents type."
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Producer-reported occurrence time (RFC 3339). Ingestion adds a separate observed/received timestamp."
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "Optional subject within the source context; do not duplicate business identifiers here unless the producer convention defines it."
+    },
+    "datacontenttype": {
+      "const": "application/json"
+    },
+    "dataschema": {
+      "const": "https://schemas.observa.example/contracts/event-data-v1.schema.json",
+      "description": "Observa event data schema version. Example-domain URI must be replaced before production."
+    },
+    "data": {
+      "$ref": "event-data-v1.schema.json"
+    }
+  },
+  "additionalProperties": false
+}
